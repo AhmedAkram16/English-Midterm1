@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Master - Beginner English Practice</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <h2>Grammar <span>Master</span></h2>
+                <p>University Edition</p>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-btn active" onclick="app.showDashboard()">📊 Dashboard</button>
+                <button class="nav-btn" onclick="app.startFinalExam()">🏆 Final Exam (45 Qs)</button>
+                <button class="nav-btn reset-btn" onclick="app.resetProgress()">🔄 Reset Progress</button>
+            </nav>
+            <div class="sidebar-footer">
+                <p>Status: <span id="storage-status">Saved Locally</span></p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- VIEW 1: DASHBOARD -->
+            <section id="dashboard-view" class="view active">
+                <header class="dashboard-header">
+                    <div class="welcome-box">
+                        <h1>Welcome Back, Student! 👋</h1>
+                        <p>Master your 9 core grammar topics with interactive practice and exams.</p>
+                    </div>
+                    <div class="stats-overview">
+                        <div class="stat-card">
+                            <h3>Overall Progress</h3>
+                            <p id="stat-progress-pct">0%</p>
+                            <div class="mini-bar"><div id="mini-progress-fill" style="width: 0%;"></div></div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Completed Qs</h3>
+                            <p id="stat-completed-qs">0 / 270</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Overall Score</h3>
+                            <p id="stat-overall-score">0%</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Correct / Incorrect</h3>
+                            <p><span id="stat-correct" style="color: #10B981;">0</span> / <span id="stat-incorrect" style="color: #EF4444;">0</span></p>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="final-banner">
+                    <div class="banner-text">
+                        <h2>Comprehensive Final Exam</h2>
+                        <p>Test your mastery across all 9 topics with 45 randomized questions and a 45-minute timer.</p>
+                    </div>
+                    <button class="btn primary-btn" onclick="app.startFinalExam()">Start Final Exam</button>
+                </div>
+
+                <h2 class="section-title">Your 9 Grammar Topics</h2>
+                <div class="topics-grid" id="topics-grid-container">
+                    <!-- Topic cards injected dynamically via JavaScript -->
+                </div>
+            </section>
+
+            <!-- VIEW 2: EXAM / PRACTICE ROOM -->
+            <section id="exam-view" class="view" style="display: none;">
+                <div class="exam-header-bar">
+                    <button class="btn secondary-btn" onclick="app.showDashboard()">⬅ Back to Dashboard</button>
+                    <h2 id="exam-title">Topic Practice</h2>
+                    <div class="exam-timer-box">
+                        ⏱️ <span id="timer-display">60:00</span>
+                    </div>
+                </div>
+
+                <div class="exam-container">
+                    <div class="exam-sidebar-nav">
+                        <h3>Question Navigator</h3>
+                        <div id="question-nav-grid" class="nav-grid">
+                            <!-- Question pills injected dynamically -->
+                        </div>
+                        <div class="nav-legend">
+                            <span><i class="dot answered"></i> Answered</span>
+                            <span><i class="dot flagged"></i> Flagged</span>
+                            <span><i class="dot unvisited"></i> Unanswered</span>
+                        </div>
+                    </div>
+
+                    <div class="exam-main-panel">
+                        <div class="question-meta-bar">
+                            <span id="question-counter">Question 1 of 30</span>
+                            <button id="flag-btn" class="flag-btn" onclick="app.toggleFlagCurrent()">⭐ Mark for Review</button>
+                        </div>
+
+                        <div class="question-box">
+                            <h3 id="question-text">Loading question...</h3>
+                            <div id="question-options-container" class="options-container">
+                                <!-- Options injected dynamically -->
+                            </div>
+                            <div id="text-answer-container" style="display: none;">
+                                <textarea id="text-answer-input" placeholder="Type your corrected sentence or answer here..." rows="4"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="exam-footer-controls">
+                            <button class="btn secondary-btn" id="prev-btn" onclick="app.prevQuestion()">Previous</button>
+                            <button class="btn primary-btn" id="next-btn" onclick="app.nextQuestion()">Next</button>
+                            <button class="btn success-btn" id="submit-exam-btn" onclick="app.confirmSubmit()">Submit Exam</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 3: RESULTS & CORRECTIONS -->
+            <section id="results-view" class="view" style="display: none;">
+                <div class="results-card">
+                    <div class="results-header">
+                        <h2>Exam Results & Analysis</h2>
+                        <div id="performance-badge" class="badge excellent">Excellent (95%)</div>
+                    </div>
+
+                    <div class="results-stats-grid">
+                        <div class="res-stat"><span>Total Score</span><h3 id="res-score">28 / 30</h3></div>
+                        <div class="res-stat"><span>Percentage</span><h3 id="res-percentage">93.3%</h3></div>
+                        <div class="res-stat"><span>Correct Answers</span><h3 id="res-correct-count" style="color: #10B981;">28</h3></div>
+                        <div class="res-stat"><span>Incorrect Answers</span><h3 id="res-incorrect-count" style="color: #EF4444;">2</h3></div>
+                        <div class="res-stat"><span>Time Taken</span><h3 id="res-time">14m 22s</h3></div>
+                    </div>
+
+                    <div class="results-actions">
+                        <button class="btn primary-btn" onclick="app.showDashboard()">Return to Dashboard</button>
+                        <button class="btn secondary-btn" onclick="app.retryMistakes()" id="retry-mistakes-btn">Retry Incorrect Questions</button>
+                    </div>
+
+                    <h3 class="section-title" style="margin-top: 30px;">Detailed Question Corrections & Explanations</h3>
+                    <div id="corrections-list-container" class="corrections-list">
+                        <!-- Detailed corrections injected dynamically -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>⚠️ Submit Exam?</h3>
+            <p id="unanswered-warning-text">You have unanswered questions. Are you sure you want to submit?</p>
+            <div class="modal-buttons">
+                <button class="btn secondary-btn" onclick="app.closeModal()">Continue Exam</button>
+                <button class="btn primary-btn" onclick="app.executeSubmit()">Yes, Submit Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
